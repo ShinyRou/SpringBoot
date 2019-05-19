@@ -1,0 +1,15 @@
+server:
+  port: 8111
+
+spring:
+  datasource:
+    url: jdbc:mysql://111.231.111.223:3306/springcloud
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    generate-ddl: true
+    show-sql: false
+    hibernate:
+      ddl-auto: update
