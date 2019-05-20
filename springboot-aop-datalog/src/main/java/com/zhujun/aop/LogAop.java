@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -75,6 +76,7 @@ public class LogAop {
         startTime = System.currentTimeMillis();
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = requestAttributes.getRequest();
+        HttpSession session = request.getSession();
         String requestURI = request.getRequestURI();
         String remoteAddr = request.getRemoteAddr();   //这个方法取客户端ip"不够好"
         String requestMethod = request.getMethod();
@@ -96,13 +98,19 @@ public class LogAop {
     /*@AfterReturning注解用于获取方法的返回值*/
     @AfterReturning(pointcut = "controllerPointCut()", returning = "object")
     public void getAfterReturn(Object object) {
-        log.info("本次接口耗时={}ms", endTime-startTime);
+        controllerLog.info("本次接口耗时={}ms", endTime-startTime);
         controllerLog.info("afterReturning={}", object.toString());
     }
 
 
+    //定义切入点
+    //Pointcut表达式
+    @Pointcut("execution(* *com.zhujun.repository.*.*(..) )")
+    //Pointcut签名
+    private void datasourcePointCut(){ }
 
-    @Before("execution(* com.zhujun.repository.*.*(..) )")
+
+    @Before("datasourcePointCut()")
     public void beforeDataQuery(JoinPoint joinPoint){
         datasourceLog.info("Repository执行开始");
         startTime = System.currentTimeMillis();
@@ -114,14 +122,14 @@ public class LogAop {
 
 
     /*@After注解表示在方法执行之后执行*/
-    @After("execution(* com.zhujun.repository.*.*(..) ))")
+    @After("datasourcePointCut()")
     public void afterData() {
         endTime = System.currentTimeMillis();
         datasourceLog.info("Repository执行结束");
     }
 
     /*@AfterReturning注解用于获取方法的返回值*/
-    @AfterReturning(pointcut = "execution(* com.zhujun.repository.*.*(..) ))", returning = "object")
+    @AfterReturning(pointcut = "datasourcePointCut()", returning = "object")
     public void afterDataQuery(Object object) {
         datasourceLog.info("本次接口耗时={}ms", endTime-startTime);
         datasourceLog.info("afterReturning={}", object.toString());

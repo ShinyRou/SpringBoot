@@ -23,6 +23,7 @@ public class UserController {
 
     @RequestMapping("/getAlluser")
     public List<User> getAllUser(){
+
         return userRepository.findAll();
     }
 }
