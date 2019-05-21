@@ -1,0 +1,19 @@
+server:
+  port: 8673
+
+spring:
+  rabbitmq:
+    password: guest
+    username: guest
+    host: localhost
+    #15672是管理端口
+    port: 5672
+    #消息手动确认
+    listener:
+      direct:
+        acknowledge-mode: manual
+      simple:
+        acknowledge-mode: manual
+
+    # 支持发布确认
+    publisher-confirms: false
