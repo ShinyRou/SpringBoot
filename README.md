@@ -13,3 +13,5 @@ direct topic fanout
 
 dev commit test
 
+dev rebase commit
+
